@@ -1,37 +1,38 @@
 
 module maindec(input   logic  [5:0] op,
     output  logic       memtoreg,
-    output  logic [1:0] ls_ctrl,
-    output  logic       memwrite,
+    output logic [1:0]half,
+    output logic b,
+    output  logic  [1:0]     memwrite,
     output  logic       branch, bne, alusrc,
     output  logic       regdst, regwrite,
     output  logic       jump, extend,
     output  logic [1:0] aluop);
 
-logic [12:0] controls;
+logic [11:0] controls;
 assign {regwrite, regdst, alusrc,
-branch, bne, ls_ctrl,memwrite,
+branch, bne,memwrite,
 memtoreg, jump, extend, aluop} = controls;
 
 always_comb
 case(op)
-6'b000000: controls <= 13'b1100000000011; //Rtyp
+6'b000000: controls <= 12'b1100000000011; //Rtyp
 
-6'b100011: controls <= 13'b1010000010100; //LW
-6'b100001: controls <= 13'b1010001010100; //LH
-6'b100000: controls <= 13'b1010010010100; //LB
-6'b100100: controls <= 13'b1010011010100; //LBU
+6'b100011: controls <= 12'b1010000010100; //LW
+6'b100001: controls <= 12'b1010001010100; //LH
+6'b100000: controls <= 12'b1010010010100; //LB
+6'b100100: controls <= 12'b1010011010100; //LBU
 
-6'b101011: controls <= 13'b0010000100100; //SW
-6'b101001: controls <= 13'b0010001100100; //SH
-6'b101000: controls <= 13'b0010010100100; //SB
+6'b101011: controls <= 12'b0010000100100; //SW
+6'b101001: controls <= 12'b0010001100100; //SH
+6'b101000: controls <= 12'b0010010100100; //SB
 
-6'b000100: controls <= 13'b0001000000001; //BEQ
-6'b001000: controls <= 13'b1010000000100; //ADDI
-6'b000010: controls <= 13'b0000000001000; //J
-6'b000101: controls <= 13'b0000001000001; //BNE
-6'b001101: controls <= 13'b1010000000010; //ORI
-default:   controls <= 13'bxxxxxxxxxxx; //???
+6'b000100: controls <= 12'b0001000000001; //BEQ
+6'b001000: controls <= 12'b1010000000100; //ADDI
+6'b000010: controls <= 12'b0000000001000; //J
+6'b000101: controls <= 12'b0000001000001; //BNE
+6'b001101: controls <= 12'b1010000000010; //ORI
+default:   controls <= 12'bxxxxxxxxxxx; //???
 endcase
 endmodule
 
@@ -39,12 +40,11 @@ endmodule
 
 
 
-// note: memwrite [1:0] will be replaced with memwrite 
-// and ctrl [1:0] to be used at load and store cases
+
 module maindec_require(input logic [5:0] op,funct,
     output logic memtoreg,
     output logic [1:0] ls_ctrl,
-    output memwrite, // [1:0]memwrite => replaced ,
+    output [1:0]memwrite,
     output logic branch, 
     output logic [1:0] alusrc,
     output logic regdst, regwrite,
@@ -65,7 +65,7 @@ module maindec_require(input logic [5:0] op,funct,
     assign resmove = funct[3];
     assign spaddr = funct[1];
 
-assign {regwrite, regdst, alusrc, branch, ls_ctrl,memwrite,
+assign {regwrite, regdst, alusrc, branch, memwrite,
         memtoreg, jump,jr, aluop, ne, half, b, lbu, link, spregwrite, mf, fpu_control, fpu_mem_write 
                                                                     ,fp_regwrite ,mem_to_fp ,fp_regdst} = controls;
 
