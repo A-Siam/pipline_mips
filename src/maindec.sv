@@ -1,6 +1,8 @@
 
 module maindec(input   logic  [5:0] op,
-    output  logic       memtoreg,ls_ctrl ,memwrite,
+    output  logic       memtoreg,
+    output  logic [1:0] ls_ctrl,
+    output  logic       memwrite,
     output  logic       branch, bne, alusrc,
     output  logic       regdst, regwrite,
     output  logic       jump, extend,
@@ -13,7 +15,7 @@ memtoreg, jump, extend, aluop} = controls;
 
 always_comb
 case(op)
-6'b000000: controls <= 13'b11000000011; //Rtyp
+6'b000000: controls <= 13'b1100000000011; //Rtyp
 
 6'b100011: controls <= 13'b1010000010100; //LW
 6'b100001: controls <= 13'b1010001010100; //LH
@@ -37,9 +39,12 @@ endmodule
 
 
 
-
+// note: memwrite [1:0] will be replaced with memwrite 
+// and ctrl [1:0] to be used at load and store cases
 module maindec_require(input logic [5:0] op,funct,
-    output logic memtoreg, [1:0]memwrite,
+    output logic memtoreg,
+    output logic [1:0] ls_ctrl,
+    output memwrite, // [1:0]memwrite => replaced ,
     output logic branch, 
     output logic [1:0] alusrc,
     output logic regdst, regwrite,
