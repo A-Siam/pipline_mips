@@ -1,27 +1,35 @@
 
 module maindec(input   logic  [5:0] op,
-    output  logic       memtoreg, memwrite,
+    output  logic       memtoreg,ls_ctrl ,memwrite,
     output  logic       branch, bne, alusrc,
     output  logic       regdst, regwrite,
     output  logic       jump, extend,
     output  logic [1:0] aluop);
 
-logic [10:0] controls;
+logic [12:0] controls;
 assign {regwrite, regdst, alusrc,
-branch, bne, memwrite,
+branch, bne, ls_ctrl,memwrite,
 memtoreg, jump, extend, aluop} = controls;
 
 always_comb
 case(op)
-6'b000000: controls <= 11'b11000000011; //Rtyp
-6'b100011: controls <= 11'b10100010100; //LW
-6'b101011: controls <= 11'b00100100100; //SW
-6'b000100: controls <= 11'b00010000001; //BEQ
-6'b001000: controls <= 11'b10100000100; //ADDI
-6'b000010: controls <= 11'b00000001000; //J
-6'b000101: controls <= 11'b00001000001; //BNE
-6'b001101: controls <= 11'b10100000010; //ORI
-default:   controls <= 11'bxxxxxxxxxxx; //???
+6'b000000: controls <= 13'b11000000011; //Rtyp
+
+6'b100011: controls <= 13'b1010000010100; //LW
+6'b100001: controls <= 13'b1010001010100; //LH
+6'b100000: controls <= 13'b1010010010100; //LB
+6'b100100: controls <= 13'b1010011010100; //LBU
+
+6'b101011: controls <= 13'b0010000100100; //SW
+6'b101001: controls <= 13'b0010001100100; //SH
+6'b101000: controls <= 13'b0010010100100; //SB
+
+6'b000100: controls <= 13'b0001000000001; //BEQ
+6'b001000: controls <= 13'b1010000000100; //ADDI
+6'b000010: controls <= 13'b0000000001000; //J
+6'b000101: controls <= 13'b0000001000001; //BNE
+6'b001101: controls <= 13'b1010000000010; //ORI
+default:   controls <= 13'bxxxxxxxxxxx; //???
 endcase
 endmodule
 

@@ -82,25 +82,30 @@ endmodule
 
 module dmem(input   logic         clk, we,
             input   logic  [31:0] a, wd,
-            input   logic  [1:0] ctrl,
+            input   logic  [1:0] ls_ctrl,
             output  logic [31:0] rd);
  logic  [31:0] RAM[63:0];
- if (ctrl==2'b00) begin // 00 => word
- assign rd = RAM[a[31:2]];  
- end
- else if (ctrl==2'b01) begin // 01 => half
-   assign rd = {{16{RAM[a[31:2]][15]}},RAM[a[31:2]][0:15]};  
- end
-else if (ctrl==2'b10) begin // 01 => byte
-   assign rd = {{24{RAM[a[31:2]][7]}},RAM[a[31:2]][0:7]};  
-end
-else begin // 11 => byte unsigned
-  assign rd = {{24{0},RAM[a[31:2]][0:7]}; 
-end
 
  always_ff @(posedge clk)
+  if (ls_ctrl==2'b00)  // 00 => word
+      assign rd = RAM[a[31:2]];  
+  
+  else if (ls_ctrl==2'b01)  // 01 => half
+      assign rd = {{16{RAM[a[31:2]][15]}},RAM[a[31:2]][15:0]};  
+  
+  else if (ls_ctrl==2'b10) // 01 => byte
+      assign rd = {{24{RAM[a[31:2]][7]}},RAM[a[31:2]][7:0]};  
+  
+  else // 11 => byte unsigned
+      assign rd = {{24{0},RAM[a[31:2]][7:0]}; 
+  
    if (we)
-     RAM[a[31:2]] <= wd;
+      if (ls_ctrl == 2'b00)
+        RAM[a[31:2]] <= wd;
+      else if (ls_ctrl == 2'b01)
+        RAM[a[31:2]][ {a[1],4'b0000} +: 16] <= wd[15:0]; // sh
+      else if (ls_ctrl == 2'b10)
+        RAM[a[31:2]][ {a[1:0],3'b000} +: 8] <= wd[7:0]; // sb      
 endmodule
 
 module regfile(input  logic        clk, 
