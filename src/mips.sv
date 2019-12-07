@@ -3,6 +3,7 @@ module mips(input  logic        clk, reset,
             input  logic [31:0] instrF,
             output logic        memwriteM,
             output logic [31:0] aluoutM, writedataM,
+            output logic [1:0] ls_ctrlM,
             input  logic [31:0] readdataM);
 			
  logic [5:0]  opD, functD;
@@ -15,7 +16,7 @@ module mips(input  logic        clk, reset,
  
  controller c(clk, reset, opD, functD, flushE, 
               equalD, nequalD, memtoregE, memtoregM, 
-              memtoregW, memwriteM, pcsrcD, 
+              memtoregW, memwriteM , pcsrcD, 
               branchD, bneD, alusrcE, regdstE, regwriteE,
               regwriteM, regwriteW, jumpD, extendD,
               alucontrolE);

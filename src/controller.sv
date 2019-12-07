@@ -6,13 +6,14 @@ module controller(input   logic        clk, reset,
                   input   logic  [5:0] opD, functD,
                   input   logic        flushE, equalD, nequalD,
                   output  logic        memtoregE, memtoregM, 
-                  output  logic       memtoregW, memwriteM,
+                  output  logic        memtoregW,
+                  output  logic  [1:0] ls_ctrlM,
+                  output  logic        memwriteM,
                   output  logic        pcsrcD, branchD, bneD, alusrcE,
                   output  logic       regdstE, regwriteE, 
                   output  logic       regwriteM, regwriteW,
                   output  logic       jumpD, extendD,
-                  output  logic [2:0] alucontrolE,
-                  output logic [1:0] ls_ctrlM);
+                  output  logic [2:0] alucontrolE);
 				  
  logic       memtoregD, ls_ctrlD ,memwriteD, alusrcD,
             regdstD, regwriteD;
