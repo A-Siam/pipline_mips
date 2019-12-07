@@ -82,10 +82,22 @@ endmodule
 
 module dmem(input   logic         clk, we,
             input   logic  [31:0] a, wd,
+            input   logic  [1:0] ctrl,
             output  logic [31:0] rd);
  logic  [31:0] RAM[63:0];
- 
- assign rd = RAM[a[31:2]]; // word aligned
+ if (ctrl==2'b00) begin // 00 => word
+ assign rd = RAM[a[31:2]];  
+ end
+ else if (ctrl==2'b01) begin // 01 => half
+   assign rd = {{16{RAM[a[31:2]][15]}},RAM[a[31:2]][0:15]};  
+ end
+else if (ctrl==2'b10) begin // 01 => byte
+   assign rd = {{24{RAM[a[31:2]][7]}},RAM[a[31:2]][0:7]};  
+end
+else begin // 11 => byte unsigned
+  assign rd = {{24{0},RAM[a[31:2]][0:7]}; 
+end
+
  always_ff @(posedge clk)
    if (we)
      RAM[a[31:2]] <= wd;

@@ -1,0 +1,4 @@
+load:
+add flow ctrl signal (00=>word,01=>half,10=>byte,11=>byte unsigned) for load and store
+    -Edit:
+        - data path & control unit & dmem
