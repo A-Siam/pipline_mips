@@ -65,7 +65,7 @@ module maindec_require(input logic [5:0] op,funct,
     assign resmove = funct[3];
     assign spaddr = funct[1];
 
-assign {regwrite, regdst, alusrc, branch, memwrite,
+assign {regwrite, regdst, alusrc, branch, ls_ctrl,memwrite,
         memtoreg, jump,jr, aluop, ne, half, b, lbu, link, spregwrite, mf, fpu_control, fpu_mem_write 
                                                                     ,fp_regwrite ,mem_to_fp ,fp_regdst} = controls;
 
@@ -87,12 +87,12 @@ always_comb
 	6'b010001: begin
 		//F-type
 		case(funct)
-			6'b000000: controls <= 30'b000000000000000000000000000101; // fpu add
-			6'b000001: controls <= 30'b000000000000000000000000010101; // fpu subtract 
-			6'b000010: controls <= 30'b000000000000000000000000100101; // fpu multi
-		    6'b000001: controls <= 30'b000000000000000000000000110101; // fpu division
-            6'b000111: controls <= 30'b000000000000000000000001010101; // fpu neg
-            6'b000101: controls <= 30'b000000000000000000000001000101; // fpu abs
+			6'b000000: controls <= 30'b0000000000000000000000000000101; // fpu add
+			6'b000001: controls <= 30'b0000000000000000000000000010101; // fpu subtract 
+			6'b000010: controls <= 30'b0000000000000000000000000100101; // fpu multi
+		    6'b000001: controls <= 30'b0000000000000000000000000110101; // fpu division
+            6'b000111: controls <= 30'b0000000000000000000000001010101; // fpu neg
+            6'b000101: controls <= 30'b0000000000000000000000001000101; // fpu abs
         	
 		endcase
 	end
