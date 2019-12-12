@@ -80,15 +80,31 @@ endmodule
 
 
 
-module dmem(input   logic         clk, we,
-            input   logic  [31:0] a, wd,
+module dmem(input   logic        clk, 
+            input   logic [1:0]  we,
+            input   logic [31:0] a, wd,
             output  logic [31:0] rd);
  logic  [31:0] RAM[63:0];
  
  assign rd = RAM[a[31:2]]; // word aligned
- always_ff @(posedge clk)
-   if (we)
-     RAM[a[31:2]] <= wd;
+ always_ff @(posedge clk)begin
+    if ( we == 2'b01 ) begin
+      RAM[a[31:2]] <= wd;
+    end 
+    else if ( we == 2'b10 ) begin
+      // {a[1],4'b0000} uses the second LSB as an indeicator to the upper 
+      // or lower word starting point
+      // which is an intuitive approuch to reach the half word
+      RAM[a[31:2]][ {a[1],4'b0000} +: 16] <= wd[15:0]; // sh
+    end
+    else if (we == 2'b11) begin
+      // {a[1:0],3'b000} uses the first and second LSB as an indeicator to the  
+      // specified byte starting point
+      // which is an intuitive approuch to reach the byte
+      RAM[a[31:2]][ {a[1:0],3'b000} +: 8] <= wd[7:0]; // sb
+    end
+  end
+   
 endmodule
 
 module regfile(input  logic        clk, 
@@ -179,5 +195,18 @@ module sl2(input  logic [31:0] a,
   assign y = {a[29:0], 2'b00};
 endmodule
 
-
-
+//TODO: use this at the end of memory
+module memout(input logic half,
+              input logic  b, bunsigned,
+              input [31:0] rd_temp,
+              output rd);
+  assign [2:0] temp = {bunsigned,half,b};
+  always_comb
+    case(temp)
+      3'b000: rd = rd_temp;
+      3'b001: rd = {{24{rd_temp[7]}},rd_temp[7:0]};
+      3'b010: rd = {{16{rd_temp[15]}},rd_temp[15:0]};
+      3'b100: rd = {{24{0}},rd_temp[7:0]}; //load byte
+      default: rd = 32'bx;
+    endcase 
+endmodule

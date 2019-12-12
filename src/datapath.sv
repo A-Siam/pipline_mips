@@ -9,9 +9,10 @@ module datapath(input   logic         clk, reset,
                 output  logic [31:0] pcF,
                 input   logic  [31:0] instrF,
                 output  logic [31:0] aluoutM, writedataM,
-                input   logic  [31:0] readdataM,
+                input   logic  [31:0] readdataM_temp,
                 output  logic [5:0]  opD, functD,
-                output  logic        flushE);
+                output  logic        flushE,
+                input logic halfM,bM,bunsignedM);
 
  logic        forwardaD, forwardbD;
  logic [1:0]  forwardaE, forwardbE;
@@ -92,7 +93,9 @@ module datapath(input   logic         clk, reset,
  
  // Writeback stage
  flopr #(32) r1W(clk, reset, aluoutM, aluoutW);
+ memout memout(halfM,bM,bunsignedM,readdataM_temp,readdataM);
  flopr #(32) r2W(clk, reset, readdataM, readdataW);
+ // add your memout module here
  flopr #(5)  r3W(clk, reset, writeregM, writeregW);
  mux2 #(32)  resmux(aluoutW, readdataW, memtoregW, resultW);
 endmodule
