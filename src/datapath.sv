@@ -27,7 +27,7 @@ module datapath(input   logic         clk, reset,
  logic [31:0] pcplus4D, instrD;
  logic [31:0] aluoutE, aluoutW;
  logic [31:0] readdataW, resultW;
-
+logic [31:0] readdataM;
  // hazard detection
  hazard    h(rsD, rtD, rsE, rtE, writeregE, writeregM, 
              writeregW,regwriteE, regwriteM, regwriteW, 

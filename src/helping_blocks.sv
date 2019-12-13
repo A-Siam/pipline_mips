@@ -73,7 +73,7 @@ module imem(input   logic  [5:0]  a,
  logic  [31:0] RAM[63:0];
  initial
    begin
-     $readmemh("memfile.dat",RAM);
+     $readmemh("memfile__lh_lb.dat",RAM);
    end
  assign rd = RAM[a]; // word aligned
 endmodule
@@ -198,9 +198,9 @@ endmodule
 //TODO: use this at the end of memory
 module memout(input logic half,
               input logic  b, bunsigned,
-              input [31:0] rd_temp,
-              output rd);
-  assign [2:0] temp = {bunsigned,half,b};
+              input logic[31:0] rd_temp,
+              output logic [31:0] rd);
+  assign  temp = {bunsigned,half,b};
   always_comb
     case(temp)
       3'b000: rd = rd_temp;

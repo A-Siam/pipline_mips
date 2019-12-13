@@ -11,6 +11,6 @@ module top(input  logic        clk, reset,
   mips mips(clk, reset, pc, instr, memwrite,half,b,bunsigned, dataadr, 
             writedata, readdata);
   imem imem(pc[7:2], instr);
-  dmem dmem(clk, memwrite,hlaf,b,bunsigned, dataadr, writedata, readdata);
+  dmem dmem(clk, memwrite, dataadr, writedata, readdata);
 endmodule
 
