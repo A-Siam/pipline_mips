@@ -80,6 +80,7 @@ endmodule
 
 
 
+<<<<<<< HEAD
 module dmem(input   logic        clk, 
             input   logic [1:0]  we,
             input   logic [31:0] a, wd,
@@ -92,6 +93,21 @@ module dmem(input   logic        clk,
       RAM[a[31:2]] <= wd;
     end 
     else if ( we == 2'b10 ) begin
+=======
+module dmem(input   logic         clk,
+            input   logic  [1:0]  we,
+            input   logic  [31:0] a, wd,
+            output  logic  [31:0] rd);
+logic  [31:0] RAM[63:0];
+assign rd = RAM[a[31:2]];
+ 
+always_ff @(posedge clk)  begin
+   
+    if ( we == 2'b01 ) begin
+      RAM[a[31:2]] <= wd;
+    end 
+    else if ( we == 2'b01 ) begin
+>>>>>>> 0bde0b2add8ea3748d1a29d6545d2bc7ed3b6a35
       // {a[1],4'b0000} uses the second LSB as an indeicator to the upper 
       // or lower word starting point
       // which is an intuitive approuch to reach the half word
@@ -102,9 +118,14 @@ module dmem(input   logic        clk,
       // specified byte starting point
       // which is an intuitive approuch to reach the byte
       RAM[a[31:2]][ {a[1:0],3'b000} +: 8] <= wd[7:0]; // sb
+<<<<<<< HEAD
     end
   end
    
+=======
+    end    
+end  
+>>>>>>> 0bde0b2add8ea3748d1a29d6545d2bc7ed3b6a35
 endmodule
 
 module regfile(input  logic        clk, 
