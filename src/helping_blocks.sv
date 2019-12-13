@@ -202,11 +202,13 @@ module memout(input logic half,
               output logic [31:0] rd);
   assign  temp = {bunsigned,half,b};
   always_comb
-    case(temp)
-      3'b000: rd = rd_temp;
-      3'b001: rd = {{24{rd_temp[7]}},rd_temp[7:0]};
-      3'b010: rd = {{16{rd_temp[15]}},rd_temp[15:0]};
-      3'b100: rd = {{24{0}},rd_temp[7:0]}; //load byte
-      default: rd = 32'bx;
-    endcase 
+  if (half == 1) begin
+    rd = {{16{rd_temp[15]}},rd_temp[15:0]};
+  end
+  else if (b == 1) begin
+    rd = {{24{rd_temp[7]}},rd_temp[7:0]};
+  end
+  else if (bunsigned == 1) begin
+    rd = {{24{0}},rd_temp[7:0]};
+  end
 endmodule
