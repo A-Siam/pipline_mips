@@ -1,8 +1,4 @@
 load/store:
 [x]add flow ctrl signal (00=>word,01=>half,10=>byte,11=>byte unsigned) for load and store
     -Edit:
-<<<<<<< HEAD
         - data path, [x] dmem, top, mips
-=======
-        - data path & control unit & [x] dmem
->>>>>>> 0bde0b2add8ea3748d1a29d6545d2bc7ed3b6a35

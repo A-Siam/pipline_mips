@@ -1,34 +1,20 @@
 
 module maindec(input   logic  [5:0] op,
-<<<<<<< HEAD
     output  logic       memtoreg, 
     output  logic     [1:0]  memwrite,
     output logic half,b,bunsigned,
-=======
-    output  logic       memtoreg,
-    output logic [1:0]half,
-    output logic b,
-    output  logic  [1:0]     memwrite,
->>>>>>> 0bde0b2add8ea3748d1a29d6545d2bc7ed3b6a35
     output  logic       branch, bne, alusrc,
     output  logic       regdst, regwrite,
     output  logic       jump, extend,
     output  logic [1:0] aluop);
 
-<<<<<<< HEAD
 logic [13:0] controls;
 assign {regwrite, regdst, alusrc,
 branch, bne, memwrite,half,b,bunsigned,
-=======
-logic [11:0] controls;
-assign {regwrite, regdst, alusrc,
-branch, bne,memwrite,
->>>>>>> 0bde0b2add8ea3748d1a29d6545d2bc7ed3b6a35
 memtoreg, jump, extend, aluop} = controls;
 
 always_comb
 case(op)
-<<<<<<< HEAD
 6'b000000: controls <= 15'b110000000000011; //Rtyp
 6'b100011: controls <= 15'b101000000010100; //LW
 6'b100001: controls <= 15'b101000010010100; //LH 
@@ -43,31 +29,11 @@ case(op)
 6'b000101: controls <= 15'b000010000000001; //BNE
 6'b001101: controls <= 15'b101000000000010; //ORI
 default:   controls <= 15'bxxxxxxxxxxxxxxx; //???
-=======
-6'b000000: controls <= 12'b1100000000011; //Rtyp
-
-6'b100011: controls <= 12'b1010000010100; //LW
-6'b100001: controls <= 12'b1010001010100; //LH
-6'b100000: controls <= 12'b1010010010100; //LB
-6'b100100: controls <= 12'b1010011010100; //LBU
-
-6'b101011: controls <= 12'b0010000100100; //SW
-6'b101001: controls <= 12'b0010001100100; //SH
-6'b101000: controls <= 12'b0010010100100; //SB
-
-6'b000100: controls <= 12'b0001000000001; //BEQ
-6'b001000: controls <= 12'b1010000000100; //ADDI
-6'b000010: controls <= 12'b0000000001000; //J
-6'b000101: controls <= 12'b0000001000001; //BNE
-6'b001101: controls <= 12'b1010000000010; //ORI
-default:   controls <= 12'bxxxxxxxxxxx; //???
->>>>>>> 0bde0b2add8ea3748d1a29d6545d2bc7ed3b6a35
 endcase
 endmodule
 
 
 
-<<<<<<< HEAD
 // module maindec_require(input logic [5:0] op,funct,
 //     output logic memtoreg, [1:0]memwrite,
 //     output logic branch, 
@@ -118,63 +84,6 @@ endmodule
 // 		    6'b000001: controls <= 30'b000000000000000000000000110101; // fpu division
 //             6'b000111: controls <= 30'b000000000000000000000001010101; // fpu neg
 //             6'b000101: controls <= 30'b000000000000000000000001000101; // fpu abs
-=======
-
-
-
-module maindec_require(input logic [5:0] op,funct,
-    output logic memtoreg,
-    output logic [1:0] ls_ctrl,
-    output [1:0]memwrite,
-    output logic branch, 
-    output logic [1:0] alusrc,
-    output logic regdst, regwrite,
-    output logic jump,jr,
-    output logic ne,
-    output logic [1:0]half,
-    output logic b,
-    output logic [3:0] aluop,
-    output logic lbu, link, spregwrite,mf, resmove, spaddr,
-	output logic [3:0] fpu_control,
-	output logic fpu_mem_write,
-	output logic fp_regwrite,
-	output logic mem_to_fp,fp_regdst);
-
-
-	logic [29:0] controls;
-
-    assign resmove = funct[3];
-    assign spaddr = funct[1];
-
-assign {regwrite, regdst, alusrc, branch, memwrite,
-        memtoreg, jump,jr, aluop, ne, half, b, lbu, link, spregwrite, mf, fpu_control, fpu_mem_write 
-                                                                    ,fp_regwrite ,mem_to_fp ,fp_regdst} = controls;
-
-
-always_comb
-
-    case(op)
-        6'b000000: begin
-		 // RTYPE
-		controls[29] <= funct[5] | ~funct[4]&~funct[3] | ~funct[3]&~funct[0] ; //regwrite
-		controls[28:21] <= 8'b10000000;                     //regdst to jump
-		controls[20] <= ~funct[5] & ~funct[4] & funct[3] & ~funct[2] & ~funct[1]; //jr
-		controls[19:11] <= 9'b111100000;                    //aluop to lbu
-		controls[10] <= ~funct[5] & ~funct[4] & funct[3] & ~funct[2] & ~funct[1] & funct[0]; //link
-		controls[9] <= ~funct[5] & funct[4] & ~funct[2] & funct[0] | ~funct[5] & funct[4] & funct[3] & ~funct[2]; //spregwrite
-		controls[8] <= ~funct[5] & funct[4] & ~funct[3] & ~funct[2] & ~funct[0]; //mf
-		controls[7:0] <= 8'b0;
-	end
-	6'b010001: begin
-		//F-type
-		case(funct)
-			6'b000000: controls <= 30'b0000000000000000000000000000101; // fpu add
-			6'b000001: controls <= 30'b0000000000000000000000000010101; // fpu subtract 
-			6'b000010: controls <= 30'b0000000000000000000000000100101; // fpu multi
-		    6'b000001: controls <= 30'b0000000000000000000000000110101; // fpu division
-            6'b000111: controls <= 30'b0000000000000000000000001010101; // fpu neg
-            6'b000101: controls <= 30'b0000000000000000000000001000101; // fpu abs
->>>>>>> 0bde0b2add8ea3748d1a29d6545d2bc7ed3b6a35
         	
 // 		endcase
 // 	end
