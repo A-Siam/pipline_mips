@@ -73,7 +73,7 @@ module imem(input   logic  [5:0]  a,
  logic  [31:0] RAM[63:0];
  initial
    begin
-     $readmemh("memfile__lh_lb.dat",RAM);
+     $readmemh("memfile__lh.dat",RAM);
    end
  assign rd = RAM[a]; // word aligned
 endmodule
@@ -195,7 +195,6 @@ module sl2(input  logic [31:0] a,
   assign y = {a[29:0], 2'b00};
 endmodule
 
-//TODO: use this at the end of memory
 module memout(input logic half,
               input logic  b, bunsigned,
               input logic[31:0] rd_temp,
